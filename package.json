@@ -5,13 +5,13 @@
   "type": "module",
   "license": "MIT",
   "author": "Geirr Winnem",
-  "homepage": "https://github.com/enterprise/vue-iframe-wrapper",
+  "homepage": "https://vue-iframe-wrapper.winnem.tech",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enterprise/vue-iframe-wrapper.git"
+    "url": "git+https://github.com/gwinnem/vue-iframe-wrapper.git"
   },
   "bugs": {
-    "url": "https://github.com/enterprise/vue-iframe-wrapper/issues"
+    "url": "https://github.com/gwinnem/vue-iframe-wrapper/issues"
   },
   "keywords": [
     "vue",
