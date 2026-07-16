@@ -1,0 +1,18 @@
+/**
+ * Optional shared styles for the Vue Iframe Wrapper library.
+ * Import via `@enterprise/vue-iframe-wrapper/style.css` if you want the
+ * default look applied without setting `iframeClass`/`iframeStyle` yourself.
+ */
+
+.viw-iframe {
+  display: block;
+  border: none;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+}
+
+.viw-iframe--bordered {
+  border: 1px solid #d9dde3;
+  border-radius: 6px;
+}

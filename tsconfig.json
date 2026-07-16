@@ -1,0 +1,20 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@enterprise/vue-iframe-wrapper": ["src/index.ts"]
+    },
+    "types": ["vitest/globals", "jsdom"]
+  },
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "demo/**/*",
+    "tests-e2e/**/*",
+    "docs/.vitepress/**/*",
+    "*.config.ts"
+  ],
+  "exclude": ["dist", "node_modules", "playwright-report", "test-results", "reports"]
+}

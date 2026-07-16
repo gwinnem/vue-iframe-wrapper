@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cross-origin fixture</title>
+  </head>
+  <body>
+    <p>
+      This page is served on a different port than the E2E harness, so a browser treats
+      it as a different origin. It exists purely so `tests-e2e/cross-origin.spec.ts` can
+      point `<IframeWrapper src="...">` at a genuinely cross-origin URL and verify the
+      library surfaces a `cross-origin` `IframeError` instead of crashing.
+    </p>
+  </body>
+</html>

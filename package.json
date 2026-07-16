@@ -1,0 +1,140 @@
+{
+  "name": "vue-iframe-wrapper",
+  "version": "1.0.0",
+  "description": "Enterprise-grade Vue 3 iframe wrapper with controlled CSS and JavaScript injection.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Geirr Winnem",
+  "homepage": "https://github.com/enterprise/vue-iframe-wrapper",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enterprise/vue-iframe-wrapper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/enterprise/vue-iframe-wrapper/issues"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "iframe",
+    "iframe-wrapper",
+    "preview",
+    "html-preview",
+    "typescript",
+    "vite",
+    "enterprise"
+  ],
+  "sideEffects": [
+    "src/styles/*.css",
+    "dist/style.css"
+  ],
+  "main": "dist/vue-iframe-wrapper.umd.cjs",
+  "module": "dist/vue-iframe-wrapper.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/vue-iframe-wrapper.js",
+      "require": "./dist/vue-iframe-wrapper.umd.cjs"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "demo": "vite --config demo/vite.config.ts --host 0.0.0.0",
+    "build": "vue-tsc -p tsconfig.build.json && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui --host 0.0.0.0",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report",
+    "coverage": "vitest run --coverage",
+    "mutation": "stryker run",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "vue-tsc --noEmit",
+    "docs:dev": "vitepress dev docs --host 0.0.0.0",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs --host 0.0.0.0",
+    "verify": "npm run lint && npm run typecheck && npm run coverage && npm run build && npm run docs:build",
+    "verify:full": "npm run verify && npm run license:check && npm run size && npm run test:e2e && npm run mutation",
+    "license:check": "license-checker-rseidelsohn --production --onlyAllow \"MIT;ISC;Apache-2.0;BSD-2-Clause;BSD-3-Clause;BlueOak-1.0.0;CC0-1.0;MIT-0;0BSD\" --excludePrivatePackages --summary",
+    "size": "size-limit",
+    "release": "release-it",
+    "release:ci": "release-it --ci"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@release-it/conventional-changelog": "^10.0.0",
+    "@rushstack/eslint-patch": "^1.10.5",
+    "@size-limit/preset-small-lib": "^12.1.0",
+    "@stryker-mutator/core": "^9.6.1",
+    "@stryker-mutator/vitest-runner": "^9.6.1",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@types/jest-axe": "^3.5.9",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^24.0.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.6.0",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.30.0",
+    "eslint-plugin-vue": "^10.3.0",
+    "jest-axe": "^10.0.0",
+    "jsdom": "^26.1.0",
+    "license-checker-rseidelsohn": "^4.4.2",
+    "prettier": "^3.6.2",
+    "release-it": "^19.0.4",
+    "size-limit": "^12.1.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0",
+    "vitepress": "^1.6.3",
+    "vitest": "^3.2.4",
+    "vue": "^3.5.17",
+    "vue-tsc": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.0.0"
+  },
+  "size-limit": [
+    {
+      "name": "ESM bundle (gzip)",
+      "path": "dist/vue-iframe-wrapper.js",
+      "limit": "6 kB",
+      "ignore": [
+        "vue"
+      ]
+    },
+    {
+      "name": "UMD bundle (gzip)",
+      "path": "dist/vue-iframe-wrapper.umd.cjs",
+      "limit": "6 kB",
+      "ignore": [
+        "vue"
+      ]
+    },
+    {
+      "name": "style.css",
+      "path": "dist/style.css",
+      "limit": "1 kB"
+    }
+  ]
+}
