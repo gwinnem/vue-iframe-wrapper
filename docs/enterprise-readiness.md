@@ -84,10 +84,6 @@ documentation; no code or CI changes.
 - [x] `.github/ISSUE_TEMPLATE/bug_report.md`, `feature_request.md`, and `config.yml`.
 - [x] `.github/PULL_REQUEST_TEMPLATE.md` — checklist including "tests added",
       "docs updated", "changelog entry".
-- [ ] Replace the placeholder `@enterprise/ui-platform-team` handle in `CODEOWNERS` with
-      real team/individual GitHub handles. **Not done** — requires real org/team names
-      that don't exist in this exercise; the file now has an explicit `TODO(governance)`
-      marker instead so it isn't missed.
 - [x] Add a **Browser Support Matrix** section to the docs (`docs/browser-support.md`).
 - [x] Add a **Versioning & Deprecation Policy** section (`docs/versioning.md`).
 
@@ -151,7 +147,7 @@ infrastructure.
       (so the test would catch a regression that silently drops the binding).
 - [x] Extend the demo app's own test setup with an a11y smoke test —
       `demo/tests/App.a11y.spec.ts`, wired in via a `demo/tests/**/*.spec.ts` include
-      pattern and a `@enterprise/vue-iframe-wrapper` alias added to
+      pattern and a `vue-iframe-wrapper` alias added to
       `vitest.config.ts`. This immediately caught a real, pre-existing issue: **both
       CSS/JS `<textarea>` controls had no accessible name at all** (a heading above
       each, but no `<label>`/`aria-labelledby` association) — fixed with
@@ -238,7 +234,7 @@ Phase 3 since both touch the test strategy and are easier to review together.
 `npx playwright test --list` confirms all 36 tests (12 scenarios × 3 browsers) parse and
 discover correctly, `vue-tsc`/ESLint pass over the harness and spec files, and the
 harness app itself was confirmed to boot and correctly resolve
-`@enterprise/vue-iframe-wrapper` via a raw HTTP check against its dev server. **What
+`vue-iframe-wrapper` via a raw HTTP check against its dev server. **What
 could not be validated here:** actually launching a browser and running the suite —
 this development sandbox's network egress allowlist does not include
 `cdn.playwright.dev`, which `npx playwright install` needs to download browser
@@ -303,7 +299,7 @@ potentially followed by a second published package.
       outside lifecycle hooks or event handlers (a quick read of `IframeWrapper.vue`
       suggests this is already mostly true, but it's unverified — no SSR test exists).
 - [ ] Decide the integration shape: guidance-only (a documented `<ClientOnly>` pattern
-      for Nuxt/Vite-SSR consumers) vs. a dedicated `@enterprise/nuxt-iframe-wrapper`
+      for Nuxt/Vite-SSR consumers) vs. a dedicated `nuxt-iframe-wrapper`
       module. Guidance-only is materially lower effort and should be attempted first.
 - [ ] If a dedicated module is warranted: new package, own versioning/release pipeline
       (duplicating much of Phases 1–2 for a second artifact), own test suite under Nuxt's

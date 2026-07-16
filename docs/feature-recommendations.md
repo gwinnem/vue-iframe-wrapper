@@ -183,7 +183,7 @@ user-facing).
 SSR/hydration lifecycle, where `IframeWrapper` would need to render a placeholder
 server-side and hydrate into the real iframe client-side only.
 
-**Proposal:** A thin `@enterprise/nuxt-iframe-wrapper` module registering the component
+**Proposal:** A thin `nuxt-iframe-wrapper` module registering the component
 globally, with explicit `<ClientOnly>`-equivalent handling built in, plus documented
 guidance for SSR frameworks generally (Nuxt, Vite SSR, Quasar) even for consumers not
 using the dedicated module.

@@ -6,7 +6,7 @@ Exhaustive reference for every prop, event, exposed method, and supporting type 
 [Examples](/guide/examples); for the underlying native `<iframe>` element these props
 wrap, see the [HTML `<iframe>` Reference](/html-iframe-element). This page is also
 published as a standalone
-[`PARAMETERS.md`](https://github.com/enterprise/vue-iframe-wrapper/blob/main/PARAMETERS.md)
+[`PARAMETERS.md`](https://github.com/gwinnem/vue-iframe-wrapper/blob/main/PARAMETERS.md)
 at the repository root.
 
 [[toc]]

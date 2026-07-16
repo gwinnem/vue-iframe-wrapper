@@ -14,8 +14,8 @@ npm install vue-iframe-wrapper vue
 
 ```vue
 <script setup lang="ts">
-import { IframeWrapper } from '@enterprise/vue-iframe-wrapper'
-import '@enterprise/vue-iframe-wrapper/style.css'
+import { IframeWrapper } from 'vue-iframe-wrapper'
+import 'vue-iframe-wrapper/style.css'
 </script>
 
 <template>

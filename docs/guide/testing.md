@@ -35,7 +35,7 @@ accept a `Document`, they can be exercised directly against a jsdom-created docu
 without mounting a component:
 
 ```ts
-import { injectCssIntoDocument } from '@enterprise/vue-iframe-wrapper'
+import { injectCssIntoDocument } from 'vue-iframe-wrapper'
 
 it('injects a style tag', () => {
   const doc = document.implementation.createHTMLDocument('test')
@@ -49,7 +49,7 @@ native `load` event to exercise auto-injection:
 
 ```ts
 import { mount } from '@vue/test-utils'
-import { IframeWrapper } from '@enterprise/vue-iframe-wrapper'
+import { IframeWrapper } from 'vue-iframe-wrapper'
 
 it('emits injected after load', async () => {
   const wrapper = mount(IframeWrapper, {
