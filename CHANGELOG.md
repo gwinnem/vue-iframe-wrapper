@@ -10,6 +10,13 @@ this project adheres to [Semantic Versioning](https://semver.org/). Entries from
 [`CONTRIBUTING.md`](./CONTRIBUTING.md). This initial entry was written by hand to seed
 the file for the `1.0.0` release, which predates that automation.
 
+## Unreleased
+
+### Updated
+ * README.md. Document link and typo fix.
+ * VitePress Refatored documentation
+
+
 ## [1.0.0] — Initial release
 
 ### Added

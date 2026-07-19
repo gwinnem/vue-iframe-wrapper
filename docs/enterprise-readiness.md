@@ -1,6 +1,6 @@
 # Enterprise Readiness Assessment
 
-Status of `vue-iframe-wrapper` v1.0.0 against the standard bar for an
+Status of `@enterprise/vue-iframe-wrapper` v1.0.0 against the standard bar for an
 enterprise-consumed internal package (governance, quality, security, release
 engineering, support), plus a phased plan to close the remaining gaps — ordered
 **easiest → hardest**, not by business value. For value-ordered recommendations see
@@ -14,56 +14,65 @@ asks "what should we build next", this one asks "what's blocking sign-off".
 
 _Updated after implementing Phases 1-3 below._
 
-| Area                         | Item                                                 | Status                                                                                                            |
-| ---------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **Quality**                  | Unit/component test suite (Vitest + Vue Test Utils)  | ✅ 47 tests (incl. accessibility suite)                                                                           |
-|                              | Coverage gate enforced in CI                         | ✅ 90% statements/branches/functions/lines                                                                        |
-|                              | Mutation testing                                     | ✅ Stryker, scoped to `src/utils` + `src/composables`; ~86%/~82% scores — see [Testing](/guide/testing)           |
-|                              | Strict TypeScript, no `any`                          | ✅ ESLint rule enforced                                                                                           |
-|                              | Lint + format enforced in CI                         | ✅ ESLint + Prettier                                                                                              |
-| **Documentation**            | README, getting started, examples                    | ✅                                                                                                                |
-|                              | Full API / parameter reference                       | ✅ `PARAMETERS.md` + VitePress                                                                                    |
-|                              | Security model documented                            | ✅ `docs/security.md`                                                                                             |
-|                              | Feature roadmap                                      | ✅ `FEATURE_RECOMMENDATIONS.md`                                                                                   |
-|                              | Versioning / deprecation policy                      | ✅ `docs/versioning.md`                                                                                           |
-|                              | Browser support matrix                               | ✅ `docs/browser-support.md`                                                                                      |
-|                              | Accessibility contract documented                    | ✅ `docs/accessibility.md`                                                                                        |
-| **Governance**               | LICENSE                                              | ✅ MIT                                                                                                            |
-|                              | CODEOWNERS                                           | ⚠️ Structure in place — placeholder handles still need real team mapping                                          |
-|                              | CONTRIBUTING guide                                   | ✅ `CONTRIBUTING.md`                                                                                              |
-|                              | Code of Conduct                                      | ✅ `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1)                                                                |
-|                              | Issue / PR templates                                 | ✅ `.github/ISSUE_TEMPLATE/*`, `.github/PULL_REQUEST_TEMPLATE.md`                                                 |
-| **Security**                 | Documented threat model & sandbox guidance           | ✅                                                                                                                |
-|                              | Dependency updates (Dependabot)                      | ✅                                                                                                                |
-|                              | Static security scanning (CodeQL)                    | ✅ `.github/workflows/codeql.yml`                                                                                 |
-|                              | Secret scanning / push protection                    | ⚠️ Requires a one-time toggle in repo Settings — not something a workflow file can enable; see Phase 2 note below |
-|                              | Vulnerability disclosure process (`SECURITY.md`)     | ✅ `SECURITY.md`                                                                                                  |
-|                              | Dependency license compliance scan                   | ✅ `npm run license:check`, wired into CI                                                                         |
-| **Release engineering**      | CI pipeline (lint/typecheck/coverage/build/docs)     | ✅                                                                                                                |
-|                              | Automated versioning + changelog (release-it)        | ✅ configured                                                                                                     |
-|                              | `CHANGELOG.md` committed and populated               | ✅ Seeded for `1.0.0`; auto-generated from here on                                                                |
-|                              | npm provenance / signed publishes                    | ✅ `publishConfig.provenance` + `--provenance` publish arg; CI already had `id-token: write`                      |
-|                              | SBOM (software bill of materials)                    | ❌ Missing — not attempted in Phases 1-3                                                                          |
-| **Accessibility**            | `title` documented as required                       | ✅                                                                                                                |
-|                              | Automated accessibility testing                      | ✅ `tests/IframeWrapper.a11y.spec.ts` + `demo/tests/App.a11y.spec.ts` (axe-core via jsdom)                        |
-|                              | Real-browser / assistive-tech-level a11y testing     | ⚠️ Partial — Playwright suite exists (Phase 4) but has no dedicated a11y assertions yet                           |
-| **Cross-browser confidence** | Real-browser E2E tests                               | ✅ Playwright across Chromium/Firefox/WebKit — see Phase 4 below                                                  |
-|                              | Visual regression tests                              | ✅ 4 scenarios, pinned browser/project, documented baseline-review process — see Phase 5 below                    |
-| **Framework coverage**       | SSR / Nuxt support verified                          | ❌ Missing (SDS Phase 12, planned — Phase 6 below)                                                                |
-| **Observability**            | Structured error/event surface (`error`, `injected`) | ✅ Library exposes hooks                                                                                          |
-|                              | Reference telemetry integration example              | ✅ `docs/guide/telemetry.md` (generic pattern, Sentry, HTTP beacon, reusable composable)                          |
-| **Bundle health**            | Bundle size tracked/budgeted in CI                   | ✅ `size-limit`, wired into CI                                                                                    |
+| Area                         | Item                                                 | Status                                                                                                                |
+| ---------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Quality**                  | Unit/component test suite (Vitest + Vue Test Utils)  | ✅ 47 tests (incl. accessibility suite)                                                                               |
+|                              | Coverage gate enforced in CI                         | ✅ 90% statements/branches/functions/lines                                                                            |
+|                              | Mutation testing                                     | ✅ Stryker, scoped to `src/utils` + `src/composables`; ~86%/~82% scores — see [Testing](/guide/testing)               |
+|                              | Strict TypeScript, no `any`                          | ✅ ESLint rule enforced                                                                                               |
+|                              | Lint + format enforced in CI                         | ✅ ESLint + Prettier                                                                                                  |
+| **Documentation**            | README, getting started, examples                    | ✅                                                                                                                    |
+|                              | Full API / parameter reference                       | ✅ `PARAMETERS.md` + VitePress                                                                                        |
+|                              | Security model documented                            | ✅ `docs/security.md`                                                                                                 |
+|                              | Feature roadmap                                      | ✅ `FEATURE_RECOMMENDATIONS.md`                                                                                       |
+|                              | Versioning / deprecation policy                      | ✅ `docs/versioning.md`                                                                                               |
+|                              | Browser support matrix                               | ✅ `docs/browser-support.md`                                                                                          |
+|                              | Accessibility contract documented                    | ✅ `docs/accessibility.md`                                                                                            |
+| **Governance**               | LICENSE                                              | ✅ MIT                                                                                                                |
+|                              | CODEOWNERS                                           | ⚠️ Structure in place — placeholder handles still need real team mapping                                              |
+|                              | CONTRIBUTING guide                                   | ✅ `CONTRIBUTING.md`                                                                                                  |
+|                              | Code of Conduct                                      | ✅ `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1)                                                                    |
+|                              | Issue / PR templates                                 | ✅ `.github/ISSUE_TEMPLATE/*`, `.github/PULL_REQUEST_TEMPLATE.md`                                                     |
+| **Security**                 | Documented threat model & sandbox guidance           | ✅                                                                                                                    |
+|                              | Dependency updates (Dependabot)                      | ✅                                                                                                                    |
+|                              | Static security scanning (CodeQL)                    | ✅ `.github/workflows/codeql.yml`                                                                                     |
+|                              | Secret scanning / push protection                    | ⚠️ Requires a one-time toggle in repo Settings — not something a workflow file can enable; see Phase 2 note below     |
+|                              | Vulnerability disclosure process (`SECURITY.md`)     | ✅ `SECURITY.md`                                                                                                      |
+|                              | Dependency license compliance scan                   | ✅ `npm run license:check`, wired into CI                                                                             |
+| **Release engineering**      | CI pipeline (lint/typecheck/coverage/build/docs)     | ✅                                                                                                                    |
+|                              | Automated versioning + changelog (release-it)        | ✅ configured                                                                                                         |
+|                              | `CHANGELOG.md` committed and populated               | ✅ Seeded for `1.0.0`; auto-generated from here on                                                                    |
+|                              | npm provenance / signed publishes                    | ✅ `publishConfig.provenance` + `--provenance` publish arg; CI already had `id-token: write`                          |
+|                              | SBOM (software bill of materials)                    | ❌ Missing — not attempted in Phases 1-3                                                                              |
+| **Accessibility**            | `title` documented as required                       | ✅                                                                                                                    |
+|                              | Automated accessibility testing                      | ✅ `tests/IframeWrapper.a11y.spec.ts` + `demo/tests/App.a11y.spec.ts` (axe-core via jsdom)                            |
+|                              | Real-browser / assistive-tech-level a11y testing     | ✅ `tests-e2e/accessibility.spec.ts` + `demo-accessibility.spec.ts` (`@axe-core/playwright`, real keyboard Tab-order) |
+| **Cross-browser confidence** | Real-browser E2E tests                               | ✅ Playwright across Chromium/Firefox/WebKit — see Phase 4 below                                                      |
+|                              | Visual regression tests                              | ✅ 4 scenarios, pinned browser/project, documented baseline-review process — see Phase 5 below                        |
+| **Framework coverage**       | SSR / Nuxt support verified                          | ❌ Missing (SDS Phase 12, planned — Phase 6 below)                                                                    |
+| **Observability**            | Structured error/event surface (`error`, `injected`) | ✅ Library exposes hooks                                                                                              |
+|                              | Reference telemetry integration example              | ✅ `docs/guide/telemetry.md` (generic pattern, Sentry, HTTP beacon, reusable composable)                              |
+| **Bundle health**            | Bundle size tracked/budgeted in CI                   | ✅ `size-limit`, wired into CI                                                                                        |
 
 **Bottom line:** Phases 1-5 are now fully implemented, including Phase 3's previously
 deferred demo-app accessibility test (which caught two real, since-fixed issues: both
 CSS/JS textareas had no accessible name, and the live event log wasn't announced to
-screen readers). A reference telemetry integration example (`docs/guide/telemetry.md`)
-is also done, closing the last Observability gap. The remaining gap is SSR/Nuxt support
-(Phase 6) — deliberately last, since it's the only phase that opens a new long-term
-maintenance surface rather than hardening the existing one — an SBOM (not yet
-attempted), and a handful of explicitly-noted manual, one-time actions: a repo-settings
-toggle for secret scanning, and real CODEOWNERS handles in place of the current
-placeholder.
+screen readers) and Phase 4's previously-open real-browser accessibility gap (now
+covered by `@axe-core/playwright` assertions plus genuine keyboard Tab-order tests,
+against both the harness and the demo app). A reference telemetry integration example
+(`docs/guide/telemetry.md`) is also done, closing the last Observability gap.
+Separately, all 13 items in
+[`FEATURE_RECOMMENDATIONS.md`](/feature-recommendations) are now implemented — new
+props (`allow`/`referrerPolicy`/`loading`/`allowFullscreen`/`autoHeight`), loading/error
+slots, asset load-status tracking, two new composables (`useIframeMessage`,
+`useIframeTheme`), a Vue Devtools inspector, and an SSR-safety audit that found and
+fixed a real bug. The remaining gap is the dedicated `@enterprise/nuxt-iframe-wrapper`
+**package** specifically (Phase 6) — deliberately last, since it's the only item that
+opens a new long-term maintenance surface rather than hardening the existing one; the
+lower-effort SSR _guidance_ alternative is done (see [SSR / Nuxt
+Guidance](/guide/ssr)). Also still open: an SBOM (not yet attempted), and a handful of
+explicitly-noted manual, one-time actions: a repo-settings toggle for secret scanning,
+and real CODEOWNERS handles in place of the current placeholder.
 
 ---
 
@@ -84,6 +93,10 @@ documentation; no code or CI changes.
 - [x] `.github/ISSUE_TEMPLATE/bug_report.md`, `feature_request.md`, and `config.yml`.
 - [x] `.github/PULL_REQUEST_TEMPLATE.md` — checklist including "tests added",
       "docs updated", "changelog entry".
+- [ ] Replace the placeholder `@enterprise/ui-platform-team` handle in `CODEOWNERS` with
+      real team/individual GitHub handles. **Not done** — requires real org/team names
+      that don't exist in this exercise; the file now has an explicit `TODO(governance)`
+      marker instead so it isn't missed.
 - [x] Add a **Browser Support Matrix** section to the docs (`docs/browser-support.md`).
 - [x] Add a **Versioning & Deprecation Policy** section (`docs/versioning.md`).
 
@@ -147,7 +160,7 @@ infrastructure.
       (so the test would catch a regression that silently drops the binding).
 - [x] Extend the demo app's own test setup with an a11y smoke test —
       `demo/tests/App.a11y.spec.ts`, wired in via a `demo/tests/**/*.spec.ts` include
-      pattern and a `vue-iframe-wrapper` alias added to
+      pattern and a `@enterprise/vue-iframe-wrapper` alias added to
       `vitest.config.ts`. This immediately caught a real, pre-existing issue: **both
       CSS/JS `<textarea>` controls had no accessible name at all** (a heading above
       each, but no `<label>`/`aria-labelledby` association) — fixed with
@@ -225,16 +238,24 @@ cannot verify actual `sandbox` attribute enforcement or genuine cross-origin beh
 - [x] This is also the natural place to validate the Browser Support Matrix committed
       in Phase 1 with actual evidence instead of an assertion — the project matrix in
       `playwright.config.ts` (chromium/firefox/webkit) matches `docs/browser-support.md`.
+- [x] Extended beyond the original Phase 4 scope with dedicated accessibility
+      assertions (`accessibility.spec.ts`, `demo-accessibility.spec.ts`) using
+      `@axe-core/playwright` — real computed accessibility roles, real color-contrast
+      calculation, and genuine keyboard Tab-order/focus behavior, none of which jsdom
+      can verify. Closes the "Real-browser / assistive-tech-level a11y testing" gap
+      left open after Phase 3. Required adding a third `webServer` entry (the demo app
+      itself, not just the harness) so the demo's actual controls could be tested.
 
 **Effort:** M–L · **Depends on:** nothing structurally, but is naturally sequenced after
 Phase 3 since both touch the test strategy and are easier to review together.
 **Unblocks:** Phase 5 (visual regression reuses this harness).
 
 **Status:** Implemented and validated as far as this sandboxed environment allows.
-`npx playwright test --list` confirms all 36 tests (12 scenarios × 3 browsers) parse and
-discover correctly, `vue-tsc`/ESLint pass over the harness and spec files, and the
-harness app itself was confirmed to boot and correctly resolve
-`vue-iframe-wrapper` via a raw HTTP check against its dev server. **What
+`npx playwright test --list` confirms all 61 tests (across 7 spec files, 3 browser
+projects plus the pinned `visual` project) parse and discover correctly, `vue-tsc`/
+ESLint pass over the harness and spec files, and the harness app itself was confirmed
+to boot and correctly resolve
+`@enterprise/vue-iframe-wrapper` via a raw HTTP check against its dev server. **What
 could not be validated here:** actually launching a browser and running the suite —
 this development sandbox's network egress allowlist does not include
 `cdn.playwright.dev`, which `npx playwright install` needs to download browser
@@ -299,7 +320,7 @@ potentially followed by a second published package.
       outside lifecycle hooks or event handlers (a quick read of `IframeWrapper.vue`
       suggests this is already mostly true, but it's unverified — no SSR test exists).
 - [ ] Decide the integration shape: guidance-only (a documented `<ClientOnly>` pattern
-      for Nuxt/Vite-SSR consumers) vs. a dedicated `nuxt-iframe-wrapper`
+      for Nuxt/Vite-SSR consumers) vs. a dedicated `@enterprise/nuxt-iframe-wrapper`
       module. Guidance-only is materially lower effort and should be attempted first.
 - [ ] If a dedicated module is warranted: new package, own versioning/release pipeline
       (duplicating much of Phases 1–2 for a second artifact), own test suite under Nuxt's

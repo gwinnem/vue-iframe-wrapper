@@ -35,7 +35,7 @@ just counting.
 
 ```vue
 <script setup lang="ts">
-import type { IframeError, IframeInjectionResult } from 'vue-iframe-wrapper'
+import type { IframeError, IframeInjectionResult } from '@enterprise/vue-iframe-wrapper'
 
 // Swap this for your real client — Sentry, a custom `track()` wrapper, etc.
 import { telemetry } from '@/lib/telemetry'
@@ -79,7 +79,7 @@ function onError(error: IframeError) {
 ```vue
 <script setup lang="ts">
 import * as Sentry from '@sentry/vue'
-import type { IframeError, IframeInjectionResult } from 'vue-iframe-wrapper'
+import type { IframeError, IframeInjectionResult } from '@enterprise/vue-iframe-wrapper'
 
 function onLoad() {
   Sentry.addBreadcrumb({
@@ -127,7 +127,7 @@ For teams with an internal logging endpoint instead of a third-party SDK,
 
 ```vue
 <script setup lang="ts">
-import type { IframeError, IframeInjectionResult } from 'vue-iframe-wrapper'
+import type { IframeError, IframeInjectionResult } from '@enterprise/vue-iframe-wrapper'
 
 function send(event: string, payload: Record<string, unknown>) {
   const body = JSON.stringify({
@@ -160,7 +160,7 @@ handlers once avoids repeating them at every call site:
 
 ```ts
 // composables/useIframeTelemetry.ts — example code, not exported by this library
-import type { IframeError, IframeInjectionResult } from '/vue-iframe-wrapper'
+import type { IframeError, IframeInjectionResult } from '@enterprise/vue-iframe-wrapper'
 import { telemetry } from '@/lib/telemetry'
 
 export function useIframeTelemetry(scope: string) {

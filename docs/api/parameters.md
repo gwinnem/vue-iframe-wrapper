@@ -6,7 +6,7 @@ Exhaustive reference for every prop, event, exposed method, and supporting type 
 [Examples](/guide/examples); for the underlying native `<iframe>` element these props
 wrap, see the [HTML `<iframe>` Reference](/html-iframe-element). This page is also
 published as a standalone
-[`PARAMETERS.md`](https://github.com/gwinnem/vue-iframe-wrapper/blob/main/PARAMETERS.md)
+[`PARAMETERS.md`](https://github.com/enterprise/vue-iframe-wrapper/blob/main/PARAMETERS.md)
 at the repository root.
 
 [[toc]]
@@ -35,6 +35,8 @@ visually but will raise a `cross-origin` `IframeError` the moment any injection 
 Use `reloadKey` (below) to force a reload of the same URL — simply re-assigning an
 identical `src` value does not trigger a new `load` event in most browsers.
 
+---
+
 #### `srcdoc`
 
 |              |                                    |
@@ -57,6 +59,8 @@ If both `src` and `srcdoc` are supplied, the native `<iframe>` element's own pre
 rules apply (browsers generally prefer `srcdoc` when both attributes are present) — but
 supplying both is not a supported or tested configuration. Pick one per instance.
 
+---
+
 ### Appearance props
 
 #### `iframeClass`
@@ -76,6 +80,8 @@ _contents_, which should go through `css`/`cssUrls` instead.
 <IframeWrapper srcdoc="<p>hi</p>" iframe-class="rounded-lg shadow-md" />
 ```
 
+---
+
 #### `iframeStyle`
 
 |              |                                    |
@@ -92,6 +98,8 @@ document inside it.
 <IframeWrapper srcdoc="<p>hi</p>" :iframe-style="{ height: '480px', border: '1px solid #ddd' }" />
 ```
 
+---
+
 #### `sandbox`
 
 |              |                                     |
@@ -102,13 +110,15 @@ document inside it.
 
 The value applied to the iframe's `sandbox` attribute. The default keeps the frame
 same-origin (required for `contentDocument` access) while still allowing injected
-scripts to execute. See [Security](/security) for the full threat model before changing
-this — in particular, do not combine `allow-scripts` and `allow-same-origin` for content
-you do not control.
+scripts to execute. See [Security](/security) for the full threat model before
+changing this — in particular, do not combine `allow-scripts` and `allow-same-origin`
+for content you do not control.
 
 ```vue
 <IframeWrapper src="/preview/report.html" sandbox="allow-scripts allow-same-origin allow-popups" />
 ```
+
+---
 
 #### `title`
 
@@ -127,11 +137,94 @@ will fail most accessibility audits.
 <IframeWrapper srcdoc="<p>hi</p>" title="Report preview" />
 ```
 
+---
+
+#### `allow`
+
+|             |             |
+| ----------- | ----------- |
+| **Type**    | `string`    |
+| **Default** | `undefined` |
+
+The iframe's `allow` attribute (Permissions Policy), e.g. `"clipboard-write; fullscreen"`.
+Direct passthrough to the native `<iframe>` — see the [HTML `<iframe>`
+Reference](/html-iframe-element#permissions) for the full list of common directives.
+
+```vue
+<IframeWrapper srcdoc="<p>hi</p>" allow="clipboard-write; fullscreen" />
+```
+
+---
+
+#### `referrerPolicy`
+
+|             |                                                                  |
+| ----------- | ---------------------------------------------------------------- |
+| **Type**    | `ReferrerPolicy`                                                 |
+| **Default** | `undefined` (browser default: `strict-origin-when-cross-origin`) |
+
+Bound to the native `referrerpolicy` attribute (note the casing difference — the prop
+is `referrerPolicy`, the rendered attribute is lowercase `referrerpolicy`, matching
+HTML). See [HTML `<iframe>` Reference → Privacy](/html-iframe-element#privacy) for the
+full list of values.
+
+```vue
+<IframeWrapper src="https://third-party.example/widget" referrer-policy="no-referrer" />
+```
+
+---
+
+#### `loading`
+
+|             |                                         |
+| ----------- | --------------------------------------- |
+| **Type**    | `'eager' \| 'lazy'`                     |
+| **Default** | `undefined` (native default: `'eager'`) |
+
+Bound to the native `loading` attribute. Use `'lazy'` for iframes below the fold.
+
+```vue
+<IframeWrapper src="/below-the-fold-widget.html" loading="lazy" />
+```
+
+---
+
+#### `allowFullscreen`
+
+|             |                                 |
+| ----------- | ------------------------------- |
+| **Type**    | `boolean`                       |
+| **Default** | `undefined` (attribute omitted) |
+
+Bound to the native `allowfullscreen` attribute (the legacy, still-widely-used way to
+permit the Fullscreen API — see [HTML `<iframe>` Reference](/html-iframe-element#allowfullscreen-legacy-boolean)
+for how this relates to `allow="fullscreen"`).
+
+```vue
+<IframeWrapper src="/video-embed.html" allow-fullscreen />
+```
+
+---
+
 ### Asset props
 
-All four asset props accept either a single string or an array of strings, and are
-injected automatically once the iframe's native `load` event fires (governed by
-`autoInject`/`injectOnLoad`, below).
+All four asset props accept an `IframeAssetInput`: a single string, an array of
+strings (the original shorthand), **or** an array of `IframeAssetDescriptor` objects —
+`{ value, id?, placement?, replaceExisting?, nonce? }` — when a specific asset needs
+its own `id`/`placement`/etc. declaratively instead of dropping into the imperative
+API just for that one entry:
+
+```vue
+<IframeWrapper
+  :css="[
+    'body { margin: 0; }',
+    { value: 'h1 { color: teal; }', id: 'headings', placement: 'body' },
+  ]"
+/>
+```
+
+All four are injected automatically once the iframe's native `load` event fires
+(governed by `autoInject`/`injectOnLoad`, below).
 
 #### `css`
 
@@ -148,6 +241,8 @@ one entry). Placed in `<head>` by default.
 <IframeWrapper :css="['body { margin: 0; }', 'h1 { color: teal; }']" />
 ```
 
+---
+
 #### `cssUrls`
 
 |              |                      |
@@ -162,6 +257,8 @@ External stylesheet URL(s), each injected as a `<link rel="stylesheet">` element
 ```vue
 <IframeWrapper :css-urls="['/themes/brand.css', '/themes/print.css']" />
 ```
+
+---
 
 #### `js`
 
@@ -179,10 +276,10 @@ run after the rest of the document has parsed.
 <IframeWrapper js="document.title = 'Patched title'" />
 ```
 
-::: warning
-Anything passed here executes with full script privileges inside the iframe. Treat it
+⚠️ Anything passed here executes with full script privileges inside the iframe. Treat it
 like any other code you ship to users — see [Security](/security).
-:::
+
+---
 
 #### `jsUrls`
 
@@ -197,6 +294,8 @@ External script URL(s), each injected as a `<script src="...">` element in `<bod
 ```vue
 <IframeWrapper :js-urls="['/scripts/tracking-stub.js']" />
 ```
+
+---
 
 ### Behaviour props
 
@@ -217,6 +316,8 @@ click rather than on load).
 <IframeWrapper ref="frame" srcdoc="<p>hi</p>" :auto-inject="false" />
 ```
 
+---
+
 #### `injectOnLoad`
 
 |              |           |
@@ -227,12 +328,14 @@ click rather than on load).
 
 When `true` (default), auto-injection re-runs on **every** `load` event — including
 reloads triggered by `reloadKey` or navigation to a new `src`. When `false`,
-auto-injection only ever runs once, on the first `load`. Has no effect when `autoInject`
-is `false`.
+auto-injection only ever runs once, on the first `load`. Has no effect when
+`autoInject` is `false`.
 
 Use `false` for content that's expensive or unsafe to inject twice (e.g. scripts with
 side effects that shouldn't re-run); use the default `true` for theming that should
 survive a reload.
+
+---
 
 #### `reloadKey`
 
@@ -258,23 +361,76 @@ const key = ref(0)
 </template>
 ```
 
+---
+
+#### `autoHeight`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Default**  | `false`   |
+| **Required** | No        |
+
+When `true`, observes the (same-origin) document's `<body>` via `ResizeObserver` and
+updates the iframe's own height to match its content, emitting `resize` on each
+measured change. A no-op for cross-origin `src` content, same as the rest of the
+injection API — same-origin access is required to observe `document.body` at all.
+
+```vue
+<IframeWrapper srcdoc="<p>hi</p>" auto-height @resize="(height) => console.log(height)" />
+```
+
+---
+
+## Slots
+
+| Slot      | Slot props               | Shown when                                                                                                          |
+| --------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `loading` | none                     | From mount until the first `load` event fires. Not rendered at all (no wrapper element) if the slot isn't provided. |
+| `error`   | `{ error: IframeError }` | Whenever the most recent action produced an `IframeError`. Cleared on the next successful `load`.                   |
+
+```vue
+<IframeWrapper srcdoc="<p>hi</p>" :css="css">
+  <template #loading>
+    <div class="spinner">Loading preview…</div>
+  </template>
+  <template #error="{ error }">
+    <div class="preview-error">Couldn't load preview: {{ error.reason }}</div>
+  </template>
+</IframeWrapper>
+```
+
+Both slots render inside the component's wrapper `<div>`, absolutely positioned over
+the iframe (`position: absolute; inset: 0`) — the iframe itself keeps rendering
+underneath regardless, since it needs to stay in the DOM to keep firing `load` events.
+
+---
+
 ## Events
 
-| Event      | Payload                                     | Emitted when                                                                                                                          |
-| ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `load`     | `(event: Event, iframe: HTMLIFrameElement)` | The native iframe `load` event fires — every load, including reloads.                                                                 |
-| `injected` | `(results: IframeInjectionResult[])`        | Auto-injection completes with at least one asset injected. Not emitted if there was nothing to inject, or if `autoInject` is `false`. |
-| `error`    | `(error: IframeError)`                      | Any injection attempt or document-access call fails, whether from auto-injection or a manual `inject*`/`get*` call.                   |
+| Event        | Payload                                     | Emitted when                                                                                                                                                                                               |
+| ------------ | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `load`       | `(event: Event, iframe: HTMLIFrameElement)` | The native iframe `load` event fires — every load, including reloads.                                                                                                                                      |
+| `injected`   | `(results: IframeInjectionResult[])`        | Auto-injection completes with at least one asset injected. Not emitted if there was nothing to inject, or if `autoInject` is `false`.                                                                      |
+| `error`      | `(error: IframeError)`                      | Any injection attempt or document-access call fails, whether from auto-injection or a manual `inject*`/`get*` call.                                                                                        |
+| `assetError` | `(result: IframeInjectionResult)`           | A `css-url`/`js-url` asset's underlying element fires its native `error` event (e.g. a 404) — distinct from `error`, which covers document-access/injection-_call_ failures, not the network fetch itself. |
+| `resize`     | `(height: number)`                          | `autoHeight` is enabled and the observed document's content height changes.                                                                                                                                |
 
 ```vue
 <IframeWrapper
   srcdoc="<p>hi</p>"
   :css="css"
+  :css-urls="cssUrls"
+  auto-height
   @load="(event, iframe) => console.log('loaded', iframe)"
   @injected="(results) => console.log(`${results.length} assets injected`)"
   @error="(error) => console.error(error.reason, error.message)"
+  @asset-error="(result) => console.warn('asset failed to load:', result.id)"
+  @resize="(height) => console.log('content height:', height)"
 />
 ```
+
+---
 
 ## Exposed instance methods
 
@@ -306,33 +462,50 @@ function applyDarkTheme() {
 </script>
 ```
 
+---
+
 ## `InjectionOptions`
 
 Passed as the second argument to every `inject*` method (both on the component and on
-`useIframeInjection`).
+`useIframeInjection`), and as the per-item fields of an `IframeAssetDescriptor` (see
+[Asset props](#asset-props)).
 
-| Field             | Type               | Default                           | Description                                                                                                                                                                                                         |
-| ----------------- | ------------------ | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`              | `string`           | auto-generated                    | A stable identifier for the injected element. Reusing the same `id` across calls replaces the previous element (see `replaceExisting`) instead of appending a duplicate — the basis for things like a theme toggle. |
-| `placement`       | `'head' \| 'body'` | `'head'` for CSS, `'body'` for JS | Where in the document the element is inserted.                                                                                                                                                                      |
-| `replaceExisting` | `boolean`          | `true`                            | When `true`, an existing element with the same `id` is replaced in place. When `false`, a duplicate is appended alongside it.                                                                                       |
-| `nonce`           | `string`           | `undefined`                       | Applied as the element's `nonce` attribute, for compatibility with a strict Content-Security-Policy on the iframe document.                                                                                         |
+| Field             | Type                                      | Default                           | Description                                                                                                                                                                                                                                                                                                                   |
+| ----------------- | ----------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`              | `string`                                  | auto-generated                    | A stable identifier for the injected element. Reusing the same `id` across calls replaces the previous element (see `replaceExisting`) instead of appending a duplicate. For `css-url`/`js-url`, the auto-generated default is a hash of the URL, not a counter — see [Feature Recommendations](/feature-recommendations) #5. |
+| `placement`       | `'head' \| 'body'`                        | `'head'` for CSS, `'body'` for JS | Where in the document the element is inserted.                                                                                                                                                                                                                                                                                |
+| `replaceExisting` | `boolean`                                 | `true`                            | When `true`, an existing element with the same `id` is replaced in place. When `false`, a duplicate is appended alongside it.                                                                                                                                                                                                 |
+| `nonce`           | `string`                                  | `undefined`                       | Applied as the element's `nonce` attribute, for compatibility with a strict Content-Security-Policy on the iframe document.                                                                                                                                                                                                   |
+| `onAssetLoad`     | `(result: IframeInjectionResult) => void` | `undefined`                       | For `css-url`/`js-url` only: called when the underlying element's native `load` event fires. No-op for inline `css`/`js`.                                                                                                                                                                                                     |
+| `onAssetError`    | `(result: IframeInjectionResult) => void` | `undefined`                       | For `css-url`/`js-url` only: called when the underlying element's native `error` event fires (e.g. a 404). The component surfaces this as the `assetError` event; `useIframeInjection` accepts a composable-level default via its own `onAssetError` option.                                                                  |
 
 ```ts
 frame.value?.injectCss(css, { id: 'theme', replaceExisting: true, nonce: cspNonce })
+
+frame.value?.injectCssUrl(brandCssUrl, {
+  onAssetLoad: (result) => console.log('loaded', result.id),
+  onAssetError: (result) => console.warn('failed to load', result.id),
+})
 ```
+
+---
 
 ## `IframeInjectionResult`
 
 Returned from every `inject*` call and included in the `injected` event payload (as an
-array, one entry per asset injected).
+array, one entry per asset injected). For `css-url`/`js-url` assets, this same object
+is mutated in place as the underlying element's `load`/`error` event fires — `status`
+updates on the reference you already hold, no second lookup needed.
 
-| Field       | Type                                     | Description                                                        |
-| ----------- | ---------------------------------------- | ------------------------------------------------------------------ |
-| `id`        | `string`                                 | The resolved id of the injected element (supplied or generated).   |
-| `type`      | `'css' \| 'css-url' \| 'js' \| 'js-url'` | The kind of asset that was injected.                               |
-| `placement` | `'head' \| 'body'`                       | Where the element was placed.                                      |
-| `element`   | `HTMLElement`                            | The actual DOM element created/updated inside the iframe document. |
+| Field       | Type                                     | Description                                                                                                                                                                             |
+| ----------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`        | `string`                                 | The resolved id of the injected element (supplied or generated).                                                                                                                        |
+| `type`      | `'css' \| 'css-url' \| 'js' \| 'js-url'` | The kind of asset that was injected.                                                                                                                                                    |
+| `placement` | `'head' \| 'body'`                       | Where the element was placed.                                                                                                                                                           |
+| `element`   | `HTMLElement`                            | The actual DOM element created/updated inside the iframe document.                                                                                                                      |
+| `status`    | `'pending' \| 'loaded' \| 'failed'`      | Always `'loaded'` for inline `css`/`js` (synchronous). Starts `'pending'` for `css-url`/`js-url`, then updates to `'loaded'`/`'failed'` once the browser actually fetches the resource. |
+
+---
 
 ## `IframeError`
 
@@ -351,6 +524,8 @@ A typed `Error` subclass, so `error instanceof IframeError` narrows correctly, a
 | `document-unavailable` | The iframe isn't mounted yet, hasn't fired `load`, or has no `<head>`/`<body>` to inject into.                      |
 | `injection-failed`     | Document access succeeded but creating/inserting the element threw (rare — usually indicates a malformed document). |
 
+---
+
 ## Prop interactions & precedence rules
 
 - **`src` vs `srcdoc`** — mutually exclusive; supplying both is unsupported. Prefer
@@ -365,5 +540,5 @@ A typed `Error` subclass, so `error instanceof IframeError` narrows correctly, a
   per-load).
 - **CSS defaults to `head`, JS defaults to `body`** when no `placement` is given via
   `InjectionOptions` — this cannot currently be changed through props, only through the
-  imperative API (see [Feature Recommendations](/feature-recommendations) for a proposal
-  to expose per-asset placement declaratively).
+  imperative API (see [Feature Recommendations](/feature-recommendations) for a
+  proposal to expose per-asset placement declaratively).

@@ -3,17 +3,17 @@
 ## Installation
 
 ```bash
-npm install vue-iframe-wrapper vue
+npm install @enterprise/vue-iframe-wrapper vue
 ```
 
-`vue` is a peer dependency — the library targets Vue `^3.0.0`.
+`vue` is a peer dependency — the library targets Vue `^3.5.0`.
 
 ## Basic Usage
 
 ```vue
 <script setup lang="ts">
-import { IframeWrapper } from 'vue-iframe-wrapper'
-import 'vue-iframe-wrapper/style.css'
+import { IframeWrapper } from '@enterprise/vue-iframe-wrapper'
+import '@enterprise/vue-iframe-wrapper/style.css'
 </script>
 
 <template>

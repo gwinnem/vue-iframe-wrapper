@@ -23,7 +23,7 @@ other than `load` — a button click, a websocket message, a form submission.
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { IframeWrapper } from 'vue-iframe-wrapper'
+import { IframeWrapper } from '@enterprise/vue-iframe-wrapper'
 
 const frame = ref<InstanceType<typeof IframeWrapper> | null>(null)
 

@@ -35,7 +35,7 @@ accept a `Document`, they can be exercised directly against a jsdom-created docu
 without mounting a component:
 
 ```ts
-import { injectCssIntoDocument } from 'vue-iframe-wrapper'
+import { injectCssIntoDocument } from '@enterprise/vue-iframe-wrapper'
 
 it('injects a style tag', () => {
   const doc = document.implementation.createHTMLDocument('test')
@@ -49,7 +49,7 @@ native `load` event to exercise auto-injection:
 
 ```ts
 import { mount } from '@vue/test-utils'
-import { IframeWrapper } from 'vue-iframe-wrapper'
+import { IframeWrapper } from '@enterprise/vue-iframe-wrapper'
 
 it('emits injected after load', async () => {
   const wrapper = mount(IframeWrapper, {
@@ -135,17 +135,33 @@ internals or console output.
 
 ### What's covered
 
-| File                   | Scenario                                                                                                               | Why it needs a real browser                                                      |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `injection.spec.ts`    | CSS/JS injection actually takes visible effect inside the iframe document                                              | jsdom can create the elements but doesn't apply real CSS cascade/computed styles |
-| `sandbox.spec.ts`      | The `sandbox` attribute's tokens (`allow-popups`, `allow-forms`, etc.) genuinely permit/block behavior                 | jsdom does not implement `sandbox` enforcement at all                            |
-| `reload.spec.ts`       | `reloadKey`/`reload()` against real navigation and `load` timing                                                       | jsdom's `load` event on an iframe is largely synthetic                           |
-| `cross-origin.spec.ts` | A genuinely cross-origin `src` (different port ⇒ different origin) produces a `cross-origin` error rather than a crash | jsdom cannot model two real origins at all                                       |
-| `visual.spec.ts`       | One screenshot-comparison test, previewing [Phase 5](/enterprise-readiness)                                            | Not attempted in jsdom at all                                                    |
+| File                         | Scenario                                                                                                                              | Why it needs a real browser                                                       |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `injection.spec.ts`          | CSS/JS injection actually takes visible effect inside the iframe document                                                             | jsdom can create the elements but doesn't apply real CSS cascade/computed styles  |
+| `sandbox.spec.ts`            | The `sandbox` attribute's tokens (`allow-popups`, `allow-forms`, etc.) genuinely permit/block behavior                                | jsdom does not implement `sandbox` enforcement at all                             |
+| `reload.spec.ts`             | `reloadKey`/`reload()` against real navigation and `load` timing                                                                      | jsdom's `load` event on an iframe is largely synthetic                            |
+| `cross-origin.spec.ts`       | A genuinely cross-origin `src` (different port -> different origin) produces a `cross-origin` error rather than a crash               | jsdom cannot model two real origins at all                                        |
+| `visual.spec.ts`             | Four screenshot-comparison scenarios, see [Visual Regression](/guide/visual-regression)                                               | Not attempted in jsdom at all                                                     |
+| `accessibility.spec.ts`      | Real axe-core checks against the harness, plus genuine keyboard Tab-order/focus behavior                                              | jsdom has no real focus/tab-order implementation and can't compute color contrast |
+| `demo-accessibility.spec.ts` | The same, against the demo app's actual controls (textareas, checkboxes, reload button) -- every control's real keyboard reachability | Same as above; complements `demo/tests/App.a11y.spec.ts`'s jsdom-based coverage   |
 
 Cross-origin tests need a second HTTP server on a different port, which Playwright
-starts automatically (see `playwright.config.ts`'s `webServer` array — one Vite dev
-server for the harness, one `python3 -m http.server` for the cross-origin fixture).
+starts automatically (see `playwright.config.ts`'s `webServer` array -- a Vite dev
+server for the harness, one for the demo app, and a `python3 -m http.server` for the
+cross-origin fixture).
+
+### Accessibility (real browser)
+
+`accessibility.spec.ts` and `demo-accessibility.spec.ts` run
+[`@axe-core/playwright`](https://github.com/dequelabs/axe-core-npm)'s `AxeBuilder`
+against genuinely rendered pages -- the layer that closes the gap
+`tests/IframeWrapper.a11y.spec.ts` and `demo/tests/App.a11y.spec.ts` (both jsdom-based)
+can't reach on their own: real computed accessibility roles, real color-contrast
+calculation (jsdom has no layout engine to compute contrast from at all), and genuine
+keyboard focus/Tab-order behavior. Runs across all three configured browsers
+(chromium/firefox/webkit) -- unlike `visual.spec.ts`, there's no reason to pin
+accessibility checks to one engine, since accessibility-tree construction and keyboard
+behavior can genuinely differ across engines.
 
 ### Visual regression
 

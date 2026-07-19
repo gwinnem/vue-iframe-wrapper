@@ -1,4 +1,8 @@
-# vue-iframe-wrapper
+<h1 align="center">vue-iframe-wrapper</h1>
+
+<h2 align="center">
+  <a href="https://vue-iframe-wrapper.winnem.tech" target="_blank">Documentation Website</a>
+</h2>
 
 Enterprise-grade Vue 3 iframe wrapper with controlled CSS and JavaScript injection.
 
@@ -87,4 +91,4 @@ docs/     # VitePress documentation site
 
 ## License
 
-MIT © Enterprise UI Team — see [LICENSE](./LICENSE).
+MIT © Geirr Winnem — see [LICENSE](./LICENSE).
