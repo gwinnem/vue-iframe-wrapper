@@ -42,7 +42,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: `Copyright © 2025-${new Date().getFullYear()} Enterprise UI Team`,
+      copyright: `Copyright © 2025-${new Date().getFullYear()} Geirr Winnem`,
     },
   },
 
